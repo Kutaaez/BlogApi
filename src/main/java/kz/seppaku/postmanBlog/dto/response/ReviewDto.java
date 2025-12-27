@@ -1,15 +1,15 @@
-package kz.seppaku.postmanBlog.dto;
-
+package kz.seppaku.postmanBlog.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LikeDto {
+public class ReviewDto {
     private Long id;
+    private String text;
     private Long userId;
     private String username;
     private Long postId;
 }
+

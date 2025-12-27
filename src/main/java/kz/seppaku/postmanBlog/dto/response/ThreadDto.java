@@ -1,4 +1,4 @@
-package kz.seppaku.postmanBlog.dto;
+package kz.seppaku.postmanBlog.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
