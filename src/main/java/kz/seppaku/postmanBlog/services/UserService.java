@@ -14,4 +14,5 @@ public interface UserService  extends UserDetailsService  {
     UserDto update(Long id, UserCreateDto userCreateDto);
     boolean delete(Long id);
 
+    void changeRole(Long userId, String roleName);
 }

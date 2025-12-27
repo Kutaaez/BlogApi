@@ -133,4 +133,28 @@ public class UserServiceImpl implements UserService {
         }
         throw new UsernameNotFoundException("User not found");
     }
+
+    @Override
+    public void changeRole(Long userId, String roleName) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return;
+        }
+
+        Role targetRole = null;
+        List<Role> allRoles = roleRepository.findAll();
+        for (Role r : allRoles) {
+            if (r.getName().equals(roleName)) {
+                targetRole = r;
+                break;
+            }
+        }
+
+        if (targetRole != null) {
+            List<Role> newRoles = new ArrayList<>();
+            newRoles.add(targetRole);
+            user.setRoles(newRoles);
+            userRepository.save(user);
+        }
+    }
 }
