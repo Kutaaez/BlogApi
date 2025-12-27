@@ -11,5 +11,5 @@ public class LikeDto {
     private Long id;
     private Long userId;
     private String username;
-    private Long postId;
+    private Long threadId;
 }
