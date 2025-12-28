@@ -2,6 +2,9 @@ package kz.seppaku.postmanBlog.services.impl;
 
 import kz.seppaku.postmanBlog.dto.request.LikeCreateDto;
 import kz.seppaku.postmanBlog.dto.response.LikeDto;
+import kz.seppaku.postmanBlog.entities.Like;
+import kz.seppaku.postmanBlog.entities.Thread;
+import kz.seppaku.postmanBlog.entities.User;
 import kz.seppaku.postmanBlog.mapper.LikeMapper;
 import kz.seppaku.postmanBlog.repositories.LikeRepository;
 import kz.seppaku.postmanBlog.repositories.ThreadRepository;
@@ -9,10 +12,11 @@ import kz.seppaku.postmanBlog.repositories.UserRepository;
 import kz.seppaku.postmanBlog.services.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +29,9 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public List<LikeDto> getAll() {
-        List<kz.seppaku.postmanBlog.entities.Like> likes = likeRepository.findAll();
-        List<LikeDto> dtos = new ArrayList<>();
-        for (kz.seppaku.postmanBlog.entities.Like like : likes) {
-            dtos.add(likeMapper.toDto(like));
-        }
-        return dtos;
+        return likeRepository.findAll().stream()
+                .map(likeMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -42,23 +43,15 @@ public class LikeServiceImpl implements LikeService {
     public LikeDto create(LikeCreateDto likeCreateDto) {
         if (likeCreateDto == null) return null;
 
-        kz.seppaku.postmanBlog.entities.Like like = new kz.seppaku.postmanBlog.entities.Like();
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        kz.seppaku.postmanBlog.entities.User user = null;
-        List<kz.seppaku.postmanBlog.entities.User> users = userRepository.findAll();
-        for (kz.seppaku.postmanBlog.entities.User u : users) {
-            if (u.getEmail().equals(email)) {
-                user = u;
-                break;
-            }
-        }
+        Like like = new Like();
 
-        if (user != null) {
-            like.setUser(user);
-        }
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        like.setUser(user);
 
         if (likeCreateDto.getThreadId() != null) {
-            kz.seppaku.postmanBlog.entities.Thread thread = threadRepository.findById(likeCreateDto.getThreadId()).orElse(null);
+            Thread thread = threadRepository.findById(likeCreateDto.getThreadId()).orElse(null);
             like.setThread(thread);
         }
 

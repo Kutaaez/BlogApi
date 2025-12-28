@@ -12,10 +12,11 @@ import kz.seppaku.postmanBlog.repositories.UserRepository;
 import kz.seppaku.postmanBlog.services.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,12 +29,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<ReviewDto> getAll() {
-        List<Review> reviews = reviewRepository.findAll();
-        List<ReviewDto> dtos = new ArrayList<>();
-        for (Review review : reviews) {
-            dtos.add(reviewMapper.toDto(review));
-        }
-        return dtos;
+        return reviewRepository.findAll().stream()
+                .map(reviewMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -53,18 +51,9 @@ public class ReviewServiceImpl implements ReviewService {
         review.setText(reviewCreateDto.getText());
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = null;
-        List<User> users = userRepository.findAll();
-        for (User u : users) {
-            if (u.getEmail().equals(email)) {
-                user = u;
-                break;
-            }
-        }
-
-        if (user != null) {
-            review.setUser(user);
-        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        review.setUser(user);
 
         if (reviewCreateDto.getThreadId() != null) {
             Thread thread = threadRepository.findById(reviewCreateDto.getThreadId()).orElse(null);

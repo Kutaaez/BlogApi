@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "thread")
+@Table(name = "threads")
 public class Thread {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

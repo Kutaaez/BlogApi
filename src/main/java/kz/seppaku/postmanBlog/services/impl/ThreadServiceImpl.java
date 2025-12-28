@@ -12,10 +12,12 @@ import kz.seppaku.postmanBlog.repositories.UserRepository;
 import kz.seppaku.postmanBlog.services.ThreadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,12 +30,9 @@ public class ThreadServiceImpl implements ThreadService {
 
     @Override
     public List<ThreadDto> getAll() {
-        List<Thread> threads = threadRepository.findAll();
-        List<ThreadDto> dtos = new ArrayList<>();
-        for (Thread thread : threads) {
-            dtos.add(threadMapper.toDto(thread));
-        }
-        return dtos;
+        return threadRepository.findAll().stream()
+                .map(threadMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -50,27 +49,12 @@ public class ThreadServiceImpl implements ThreadService {
         thread.setText(threadCreateDto.getText());
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = null;
-        List<User> users = userRepository.findAll();
-        for (User u : users) {
-            if (u.getEmail().equals(email)) {
-                user = u;
-                break;
-            }
-        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        thread.setUser(user);
 
-        if (user != null) {
-            thread.setUser(user);
-        }
-
-        if (threadCreateDto.getCategoryIds() != null) {
-            List<Category> categories = new ArrayList<>();
-            for (Long catId : threadCreateDto.getCategoryIds()) {
-                Category cat = categoryRepository.findById(catId).orElse(null);
-                if (cat != null) {
-                    categories.add(cat);
-                }
-            }
+        if (threadCreateDto.getCategoryIds() != null && !threadCreateDto.getCategoryIds().isEmpty()) {
+            List<Category> categories = categoryRepository.findAllById(threadCreateDto.getCategoryIds());
             thread.setCategories(categories);
         }
 
@@ -88,13 +72,7 @@ public class ThreadServiceImpl implements ThreadService {
         existing.setText(threadCreateDto.getText());
 
         if (threadCreateDto.getCategoryIds() != null) {
-            List<Category> categories = new ArrayList<>();
-            for (Long catId : threadCreateDto.getCategoryIds()) {
-                Category cat = categoryRepository.findById(catId).orElse(null);
-                if (cat != null) {
-                    categories.add(cat);
-                }
-            }
+            List<Category> categories = categoryRepository.findAllById(threadCreateDto.getCategoryIds());
             existing.setCategories(categories);
         }
 

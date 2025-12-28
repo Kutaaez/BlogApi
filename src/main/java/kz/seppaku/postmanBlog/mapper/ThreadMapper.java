@@ -13,10 +13,10 @@ public interface ThreadMapper {
 
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "user.actualUsername", target = "username")
-    @Mapping(source = "commentaries", target = "reviews")
+    @Mapping(source = "commentaries", target = "comments")
     ThreadDto toDto(Thread thread);
 
     @Mapping(target = "user", ignore = true)
-    @Mapping(source = "reviews", target = "commentaries")
+    @Mapping(source = "comments", target = "commentaries")
     Thread toEntity(ThreadDto threadDto);
 }
