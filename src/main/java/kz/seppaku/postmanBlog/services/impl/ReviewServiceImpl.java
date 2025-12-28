@@ -5,7 +5,7 @@ import kz.seppaku.postmanBlog.dto.request.ReviewCreateDto;
 import kz.seppaku.postmanBlog.entities.Review;
 import kz.seppaku.postmanBlog.entities.Thread;
 import kz.seppaku.postmanBlog.entities.User;
-import kz.seppaku.postmanBlog.mappers.ReviewMapper;
+import kz.seppaku.postmanBlog.mapper.ReviewMapper;
 import kz.seppaku.postmanBlog.repositories.ReviewRepository;
 import kz.seppaku.postmanBlog.repositories.ThreadRepository;
 import kz.seppaku.postmanBlog.repositories.UserRepository;

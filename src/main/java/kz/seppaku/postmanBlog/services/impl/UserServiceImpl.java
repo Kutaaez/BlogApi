@@ -4,7 +4,7 @@ import kz.seppaku.postmanBlog.dto.response.UserDto;
 import kz.seppaku.postmanBlog.dto.request.UserCreateDto;
 import kz.seppaku.postmanBlog.entities.Role;
 import kz.seppaku.postmanBlog.entities.User;
-import kz.seppaku.postmanBlog.mappers.UserMapper;
+import kz.seppaku.postmanBlog.mapper.UserMapper;
 import kz.seppaku.postmanBlog.repositories.RoleRepository;
 import kz.seppaku.postmanBlog.repositories.UserRepository;
 import kz.seppaku.postmanBlog.services.UserService;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,12 +29,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAll() {
-        List<User> users = userRepository.findAll();
-        List<UserDto> dtos = new ArrayList<>();
-        for (User user : users) {
-            dtos.add(userMapper.toDto(user));
-        }
-        return dtos;
+        return userRepository.findAll().stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -43,24 +41,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getByEmail(String email) {
-        List<User> users = userRepository.findAll();
-        for (User user : users) {
-            if (user.getEmail().equals(email)) {
-                return userMapper.toDto(user);
-            }
-        }
-        return null;
+        return userMapper.toDto(userRepository.findByEmail(email).orElse(null));
     }
 
     @Override
     public UserDto create(UserCreateDto userCreateDto) {
         if (userCreateDto == null) return null;
 
-        List<User> users = userRepository.findAll();
-        for (User u : users) {
-            if (u.getEmail().equals(userCreateDto.getEmail())) {
-                return null;
-            }
+        if (userRepository.findByEmail(userCreateDto.getEmail()).isPresent()) {
+            return null;
         }
 
         User newUser = new User();
@@ -72,25 +61,13 @@ public class UserServiceImpl implements UserService {
         List<Role> roles = new ArrayList<>();
 
         if (userCreateDto.getRoles() != null && !userCreateDto.getRoles().isEmpty()) {
-            List<Role> allRoles = roleRepository.findAll();
             for (String roleName : userCreateDto.getRoles()) {
-                for (Role r : allRoles) {
-                    if (r.getName().equals(roleName)) {
-                        roles.add(r);
-                        break;
-                    }
-                }
+                roleRepository.findByName(roleName).ifPresent(roles::add);
             }
         }
 
         if (roles.isEmpty()) {
-            List<Role> allRoles = roleRepository.findAll();
-            for (Role r : allRoles) {
-                if (r.getName().equals("ROLE_USER")) {
-                    roles.add(r);
-                    break;
-                }
-            }
+            roleRepository.findByName("ROLE_USER").ifPresent(roles::add);
         }
 
         newUser.setRoles(roles);
@@ -126,13 +103,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        List<User> users = userRepository.findAll();
-        for (User user : users) {
-            if (user.getEmail().equals(username)) {
-                return user;
-            }
-        }
-        throw new UsernameNotFoundException("User not found");
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Override
@@ -142,21 +114,12 @@ public class UserServiceImpl implements UserService {
             return;
         }
 
-        Role targetRole = null;
-        List<Role> allRoles = roleRepository.findAll();
-        for (Role r : allRoles) {
-            if (r.getName().equals(roleName)) {
-                targetRole = r;
-                break;
-            }
-        }
-
-        if (targetRole != null) {
+        roleRepository.findByName(roleName).ifPresent(role -> {
             List<Role> newRoles = new ArrayList<>();
-            newRoles.add(targetRole);
+            newRoles.add(role);
             user.setRoles(newRoles);
             userRepository.save(user);
-        }
+        });
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
+@Table(name = "user")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +23,7 @@ public class User implements UserDetails {
     private String username;
     private String email;
     private String password;
-
-    private boolean banned;
+    private Boolean banned = false;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -57,7 +56,6 @@ public class User implements UserDetails {
     public String getUsername() {
         return email;
     }
-
 
     public String getActualUsername() {
         return username;

@@ -3,14 +3,14 @@ package kz.seppaku.postmanBlog.services.impl;
 import kz.seppaku.postmanBlog.dto.response.CategoryDto;
 import kz.seppaku.postmanBlog.dto.request.CategoryCreateDto;
 import kz.seppaku.postmanBlog.entities.Category;
-import kz.seppaku.postmanBlog.mappers.CategoryMapper;
+import kz.seppaku.postmanBlog.mapper.CategoryMapper;
 import kz.seppaku.postmanBlog.repositories.CategoryRepository;
 import kz.seppaku.postmanBlog.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,18 +21,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> getAll() {
-        List<Category> entities = categoryRepository.findAll();
-        List<CategoryDto> dtos = new ArrayList<>();
-        for (Category entity : entities) {
-            dtos.add(categoryMapper.toDto(entity));
-        }
-        return dtos;
+        return categoryRepository.findAll().stream()
+                .map(categoryMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public CategoryDto getById(Long id) {
-        Category category = categoryRepository.findById(id).orElse(null);
-        return categoryMapper.toDto(category);
+        return categoryMapper.toDto(categoryRepository.findById(id).orElse(null));
     }
 
     @Override

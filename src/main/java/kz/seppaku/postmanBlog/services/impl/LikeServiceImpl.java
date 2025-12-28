@@ -2,7 +2,7 @@ package kz.seppaku.postmanBlog.services.impl;
 
 import kz.seppaku.postmanBlog.dto.request.LikeCreateDto;
 import kz.seppaku.postmanBlog.dto.response.LikeDto;
-import kz.seppaku.postmanBlog.mappers.LikeMapper;
+import kz.seppaku.postmanBlog.mapper.LikeMapper;
 import kz.seppaku.postmanBlog.repositories.LikeRepository;
 import kz.seppaku.postmanBlog.repositories.ThreadRepository;
 import kz.seppaku.postmanBlog.repositories.UserRepository;

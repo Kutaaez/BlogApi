@@ -5,7 +5,7 @@ import kz.seppaku.postmanBlog.dto.request.ThreadCreateDto;
 import kz.seppaku.postmanBlog.entities.Category;
 import kz.seppaku.postmanBlog.entities.Thread;
 import kz.seppaku.postmanBlog.entities.User;
-import kz.seppaku.postmanBlog.mappers.ThreadMapper;
+import kz.seppaku.postmanBlog.mapper.ThreadMapper;
 import kz.seppaku.postmanBlog.repositories.CategoryRepository;
 import kz.seppaku.postmanBlog.repositories.ThreadRepository;
 import kz.seppaku.postmanBlog.repositories.UserRepository;
