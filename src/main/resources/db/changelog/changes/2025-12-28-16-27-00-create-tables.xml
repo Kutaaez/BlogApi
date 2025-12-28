@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-role-table" author="student">
+        <createTable tableName="role">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-users-table" author="student">
+        <createTable tableName="users">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(255)"/>
+            <column name="email" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="banned" type="boolean" defaultValueBoolean="false"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-users-role-table" author="student">
+        <createTable tableName="users_role">
+            <column name="user_model_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="users_role" baseColumnNames="user_model_id"
+                                 constraintName="fk_users_role_user" referencedTableName="users" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="users_role" baseColumnNames="role_id"
+                                 constraintName="fk_users_role_role" referencedTableName="role" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="create-categories-table" author="student">
+        <createTable tableName="categories">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-posts-table" author="student">
+        <createTable tableName="posts">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)"/>
+            <column name="text" type="text"/>
+            <column name="user_id" type="bigint"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="posts" baseColumnNames="user_id"
+                                 constraintName="fk_posts_user" referencedTableName="users" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="create-thread-categories-table" author="student">
+        <createTable tableName="thread_categories">
+            <column name="thread_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="thread_categories" baseColumnNames="thread_id"
+                                 constraintName="fk_thread_categories_thread" referencedTableName="posts" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="thread_categories" baseColumnNames="category_id"
+                                 constraintName="fk_thread_categories_category" referencedTableName="categories" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="create-review-table" author="student">
+        <createTable tableName="review">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="text" type="text"/>
+            <column name="user_id" type="bigint"/>
+            <column name="thread_id" type="bigint"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="review" baseColumnNames="user_id"
+                                 constraintName="fk_review_user" referencedTableName="users" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="review" baseColumnNames="thread_id"
+                                 constraintName="fk_review_thread" referencedTableName="posts" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="create-likes-table" author="student">
+        <createTable tableName="likes">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint"/>
+            <column name="thread_id" type="bigint"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="likes" baseColumnNames="user_id"
+                                 constraintName="fk_likes_user" referencedTableName="users" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="likes" baseColumnNames="thread_id"
+                                 constraintName="fk_likes_thread" referencedTableName="posts" referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>
