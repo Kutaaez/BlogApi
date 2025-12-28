@@ -13,6 +13,7 @@ public class UserDto {
     private Long id;
     private String username;
     private String email;
+    private boolean banned;
     private List<ThreadDto> posts;
     private List<ReviewDto> comments;
     private List<LikeDto> likes;

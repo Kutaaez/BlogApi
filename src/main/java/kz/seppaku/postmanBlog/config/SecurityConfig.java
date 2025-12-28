@@ -50,13 +50,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-
                         .requestMatchers(HttpMethod.DELETE, "/posts/**", "/reviews/**").hasAnyRole("ADMIN", "MODERATOR")
-
                         .requestMatchers(HttpMethod.POST, "/posts/**", "/reviews/**").hasAnyRole("USER", "MODERATOR", "ADMIN")
-
+                        .requestMatchers(HttpMethod.PUT, "/posts/**", "/reviews/**").hasAnyRole("USER", "MODERATOR", "ADMIN")
+                        .requestMatchers("/users/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());

@@ -67,6 +67,7 @@ public class UserServiceImpl implements UserService {
         newUser.setUsername(userCreateDto.getUsername());
         newUser.setEmail(userCreateDto.getEmail());
         newUser.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
+        newUser.setBanned(false);
 
         List<Role> roles = new ArrayList<>();
 
@@ -154,6 +155,26 @@ public class UserServiceImpl implements UserService {
             List<Role> newRoles = new ArrayList<>();
             newRoles.add(targetRole);
             user.setRoles(newRoles);
+            userRepository.save(user);
+        }
+    }
+
+    @Override
+    public void changePassword(Long userId, String oldPassword, String newPassword) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(newPassword));
+                userRepository.save(user);
+            }
+        }
+    }
+
+    @Override
+    public void banUser(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            user.setBanned(true);
             userRepository.save(user);
         }
     }

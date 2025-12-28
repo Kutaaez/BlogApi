@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService  extends UserDetailsService  {
+public interface UserService extends UserDetailsService {
     List<UserDto> getAll();
     UserDto getById(Long id);
     UserDto getByEmail(String email);
@@ -15,4 +15,6 @@ public interface UserService  extends UserDetailsService  {
     boolean delete(Long id);
 
     void changeRole(Long userId, String roleName);
+    void changePassword(Long userId, String oldPassword, String newPassword);
+    void banUser(Long userId);
 }

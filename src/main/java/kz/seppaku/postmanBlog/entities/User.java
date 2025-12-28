@@ -24,6 +24,7 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
+    private boolean banned;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -69,7 +70,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !banned;
     }
 
     @Override

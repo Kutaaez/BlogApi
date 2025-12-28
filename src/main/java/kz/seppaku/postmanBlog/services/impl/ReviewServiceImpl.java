@@ -43,12 +43,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewDto create(ReviewDto reviewDto) {
-        // Этот метод остался в интерфейсе от старой версии, но по логике CreateDto лучше
-        // Здесь заглушка или адаптация, если в интерфейсе ReviewDto
         return null;
     }
 
-    // Перегруженный метод, если вы используете ReviewCreateDto
     public ReviewDto create(ReviewCreateDto reviewCreateDto) {
         if (reviewCreateDto == null) return null;
 
