@@ -38,6 +38,11 @@ public class AdminController {
         userService.banUser(id);
         return ResponseEntity.ok().build();
     }
+    @PostMapping("/{id}/unban")
+    public ResponseEntity<Void> unbanUser(@PathVariable Long id) {
+        userService.unbanUser(id);
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("/{id}/role")
     public ResponseEntity<Void> changeRole(@PathVariable Long id, @RequestParam String role) {

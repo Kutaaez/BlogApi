@@ -17,4 +17,6 @@ public interface UserService extends UserDetailsService {
     void changeRole(Long userId, String roleName);
     void changePassword(Long userId, String oldPassword, String newPassword);
     void banUser(Long userId);
+
+    void unbanUser(Long userId);
 }

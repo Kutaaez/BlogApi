@@ -141,4 +141,13 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
         }
     }
+
+    @Override
+    public void unbanUser(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            user.setBanned(false);
+            userRepository.save(user);
+        }
+    }
 }

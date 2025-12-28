@@ -54,12 +54,10 @@ public class AuthController {
         return ResponseEntity.ok(userDto);
     }
 
-    // --- НОВЫЙ МЕТОД LOGOUT ---
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
-            // Эта строка делает всю грязную работу: удаляет сессию и очищает контекст
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         return ResponseEntity.ok("Logout successful");
