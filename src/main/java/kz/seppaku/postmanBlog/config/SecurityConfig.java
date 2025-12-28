@@ -43,9 +43,6 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/error", "/css/**", "/js/**").permitAll()
-
-                // --- ИСПРАВЛЕНО: hasAnyRole -> hasAnyAuthority ---
-                // Используем полные названия ролей, как они лежат в БД (с префиксом ROLE_)
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
 
                 .requestMatchers(HttpMethod.GET, "/threads/**", "/reviews/**").permitAll()
@@ -58,7 +55,6 @@ public class SecurityConfig {
 
                 .requestMatchers(HttpMethod.PUT, "/threads/**", "/reviews/**")
                 .hasAnyAuthority("ROLE_USER", "ROLE_MODERATOR", "ROLE_ADMIN")
-                // --------------------------------------------------
 
                 .requestMatchers("/users/**").authenticated()
                 .anyRequest().authenticated()

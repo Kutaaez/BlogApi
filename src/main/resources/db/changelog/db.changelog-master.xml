@@ -8,4 +8,6 @@
     <include file="changes/2025-12-28-16-27-00-create-tables.xml" relativeToChangelogFile="true"/>
     <include file="changes/2025-12-28-16-29-00-insert-roles.xml" relativeToChangelogFile="true"/>
 
+    <include file="changes/2025-12-28-16-35-00-insert-admin.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>

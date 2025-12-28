@@ -43,17 +43,23 @@ public class LikeServiceImpl implements LikeService {
     public LikeDto create(LikeCreateDto likeCreateDto) {
         if (likeCreateDto == null) return null;
 
-        Like like = new Like();
-
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        like.setUser(user);
 
+        Thread thread = null;
         if (likeCreateDto.getThreadId() != null) {
-            Thread thread = threadRepository.findById(likeCreateDto.getThreadId()).orElse(null);
-            like.setThread(thread);
+            thread = threadRepository.findById(likeCreateDto.getThreadId())
+                    .orElseThrow(() -> new RuntimeException("Thread not found"));
         }
+
+        if (likeRepository.existsByUserAndThread(user, thread)) {
+            throw new RuntimeException("User has already liked this thread");
+        }
+
+        Like like = new Like();
+        like.setUser(user);
+        like.setThread(thread);
 
         return likeMapper.toDto(likeRepository.save(like));
     }

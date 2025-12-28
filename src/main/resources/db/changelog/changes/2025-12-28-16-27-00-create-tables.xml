@@ -59,8 +59,8 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="create-posts-table" author="student">
-        <createTable tableName="posts">
+    <changeSet id="create-threads-table" author="student">
+        <createTable tableName="threads">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -69,8 +69,8 @@
             <column name="user_id" type="bigint"/>
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="posts" baseColumnNames="user_id"
-                                 constraintName="fk_posts_user" referencedTableName="users" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="threads" baseColumnNames="user_id"
+                                 constraintName="fk_threads_user" referencedTableName="users" referencedColumnNames="id"/>
     </changeSet>
 
     <changeSet id="create-thread-categories-table" author="student">
@@ -84,13 +84,13 @@
         </createTable>
 
         <addForeignKeyConstraint baseTableName="thread_categories" baseColumnNames="thread_id"
-                                 constraintName="fk_thread_categories_thread" referencedTableName="posts" referencedColumnNames="id"/>
+                                 constraintName="fk_thread_categories_thread" referencedTableName="threads" referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="thread_categories" baseColumnNames="category_id"
                                  constraintName="fk_thread_categories_category" referencedTableName="categories" referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="create-review-table" author="student">
-        <createTable tableName="review">
+    <changeSet id="create-reviews-table" author="student">
+        <createTable tableName="reviews">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -99,10 +99,10 @@
             <column name="thread_id" type="bigint"/>
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="review" baseColumnNames="user_id"
-                                 constraintName="fk_review_user" referencedTableName="users" referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="review" baseColumnNames="thread_id"
-                                 constraintName="fk_review_thread" referencedTableName="posts" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="reviews" baseColumnNames="user_id"
+                                 constraintName="fk_reviews_user" referencedTableName="users" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="reviews" baseColumnNames="thread_id"
+                                 constraintName="fk_reviews_thread" referencedTableName="threads" referencedColumnNames="id"/>
     </changeSet>
 
     <changeSet id="create-likes-table" author="student">
@@ -117,7 +117,7 @@
         <addForeignKeyConstraint baseTableName="likes" baseColumnNames="user_id"
                                  constraintName="fk_likes_user" referencedTableName="users" referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="likes" baseColumnNames="thread_id"
-                                 constraintName="fk_likes_thread" referencedTableName="posts" referencedColumnNames="id"/>
+                                 constraintName="fk_likes_thread" referencedTableName="threads" referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

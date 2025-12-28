@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="insert-admin-user" author="student">
+        <insert tableName="users">
+            <column name="username" value="Admin"/>
+            <column name="email" value="admin@gmail.com"/>
+            <column name="password" value="$2a$10$kypbnGGCpJ7UQlysnqzJG.6H.dUewn7UPVWA3Ip.E.8U4jlVnFNnu"/>
+            <column name="banned" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="assign-admin-role" author="student">
+        <sql>
+            INSERT INTO users_role (user_model_id, role_id)
+            VALUES (
+                           (SELECT id FROM users WHERE email = 'admin@gmail.com'),
+                           (SELECT id FROM role WHERE name = 'ROLE_ADMIN')
+                   );
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
