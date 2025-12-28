@@ -181,7 +181,3 @@ This project was developed for educational purposes as part of the Software Engi
 ---
 
 *Developed by Zharaskhan Mirmauly s23067305@Narxoz.kz*
-
----
-
-**Next step:** Would you like me to create a concise "Technical Summary" document that you can use as a script for your presentation?
